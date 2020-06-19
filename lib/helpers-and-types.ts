@@ -1,5 +1,4 @@
 import { getLuminance, getSaturation } from './hsl';
-import { MAX_LUM, MIN_LUM } from './constants';
 
 export type RGB = [number, number, number];
 export type Data = Uint8Array | Uint8ClampedArray;
@@ -15,17 +14,19 @@ export const deserializeHex = (hex: string) => [
 
 export const round = (x: number, r: number) => Math.round(x / r) * r;
 
-export const calculateColorScore = (rgb: RGB, includeSaturation = false) => {
-  const l = getLuminance(rgb);
-  return (l - MIN_LUM) * (MAX_LUM - l) * (includeSaturation ? getSaturation(rgb) : 1);
+export type ScoreCalculator = (rgb: RGB, includeSaturation?: boolean) => number;
+export const createScoreCalculator = (minl: number, maxl: number): ScoreCalculator => {
+  return (rgb: RGB, includeSaturation = false) => {
+    const l = getLuminance(rgb);
+    return (l - minl) * (maxl - l) * (includeSaturation ? getSaturation(rgb) : 1);
+  };
 };
 
-export const nextIsBetter = (prev: string, next: string) => {
-  return next !== prev && (
-    calculateColorScore(
-      deserializeHex(prev), true
-    ) < calculateColorScore(
-      deserializeHex(next), true
-    )
-  );
+export type Comparator = (prev: string, next: string) => boolean;
+export const createComparator = (getScore: ScoreCalculator): Comparator => {
+  return (prev: string, next: string) => {
+    return next !== prev && (
+      getScore(deserializeHex(prev), true) < getScore(deserializeHex(next), true)
+    );
+  };
 };
