@@ -1,4 +1,4 @@
-import { getHue, getLuminosity, getSaturation } from './hsl';
+import { getHue, getLuminance, getSaturation } from './hsl';
 import {
   RGB, Data, round, deserializeHex, serializeHex, calculateColorScore, nextIsBetter
 } from './helpers-and-types';
@@ -25,7 +25,7 @@ export default class ColorPicker {
     for (let i = 0; i < data.length; i += 4) {
       const rgb: RGB = [data[i], data[i + 1], data[i + 2]],
         hex = serializeHex(rgb),
-        l = getLuminosity(rgb);
+        l = getLuminance(rgb);
 
       if (l > MIN_LUM && l < MAX_LUM && getSaturation(rgb) >= MIN_SAT) {
         const k = this._generateKey(hex);

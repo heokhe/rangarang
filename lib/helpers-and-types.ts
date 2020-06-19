@@ -1,4 +1,4 @@
-import { getLuminosity, getSaturation } from './hsl';
+import { getLuminance, getSaturation } from './hsl';
 import { MAX_LUM, MIN_LUM } from './constants';
 
 export type RGB = [number, number, number];
@@ -16,7 +16,7 @@ export const deserializeHex = (hex: string) => [
 export const round = (x: number, r: number) => Math.round(x / r) * r;
 
 export const calculateColorScore = (rgb: RGB, includeSaturation = false) => {
-  const l = getLuminosity(rgb);
+  const l = getLuminance(rgb);
   return (l - MIN_LUM) * (MAX_LUM - l) * (includeSaturation ? getSaturation(rgb) : 1);
 };
 

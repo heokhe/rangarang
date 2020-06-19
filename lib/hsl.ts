@@ -1,6 +1,6 @@
 import { RGB } from './helpers-and-types';
 
-export const getLuminosity = ([r, g, b]: RGB) => (Math.max(r, g, b) + Math.min(r, g, b)) / 2 / 255;
+export const getLuminance = ([r, g, b]: RGB) => (0.299 * r + 0.587 * g + 0.114 * b) / 255;
 
 export function getHue([r, g, b]: RGB) {
   [r, g, b] = [r, g, b].map(x => x / 255);
@@ -26,7 +26,7 @@ export function getHue([r, g, b]: RGB) {
 }
 
 export function getSaturation([r, g, b]: RGB) {
-  const l = getLuminosity([r, g, b]);
+  const l = getLuminance([r, g, b]);
   if (l === 1) return 0;
   return (Math.max(r, g, b) - Math.min(r, g, b)) / 255 / (1 - Math.abs(2 * l - 1));
 }
