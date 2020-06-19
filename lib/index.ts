@@ -59,7 +59,7 @@ export default class ColorPicker {
         prevScore = score;
       }
     }
-    return prevColor;
+    return { primary: prevColor };
   }
 }
 
