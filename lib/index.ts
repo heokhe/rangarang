@@ -19,7 +19,7 @@ const DEFAULT_OPTIONS: Options = {
   skipPixels: 1
 };
 
-export default class ColorPicker {
+export class ColorPicker {
   private _data: Data;
 
   private _colorsMap: Map<string, string>;
@@ -32,9 +32,9 @@ export default class ColorPicker {
 
   private _compare: Comparator;
 
-  constructor(data: Data, options: Partial<Options> = {}) {
+  constructor(data: Data, options: Options) {
     this._data = data;
-    this._options = { ...options, ...DEFAULT_OPTIONS };
+    this._options = options;
     this._calculateScore = createScoreCalculator(
       this._options.minLuminance, this._options.maxLuminance
     );
@@ -88,6 +88,11 @@ export default class ColorPicker {
     }
     return { primary: prevColor };
   }
+}
+
+export default function rangarang(data: Data, options: Partial<Options> = {}) {
+  const picker = new ColorPicker(data, { ...options, ...DEFAULT_OPTIONS });
+  return picker.getBestColor();
 }
 
 export { getDataFromCanvas } from './data';

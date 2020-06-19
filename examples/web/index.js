@@ -1,15 +1,13 @@
 /* eslint-disable no-console */
-import ColorPicker, { getDataFromCanvas } from '../../dist/index.modern.js';
+import rangarang, { getDataFromCanvas } from '../../dist/index.modern.js';
 
 window.onload = () => {
   const image = new Image();
   image.src = 'leaf.jpg';
   image.onload = () => {
     console.time('picker');
-    const picker = new ColorPicker(getDataFromCanvas(image));
-    window.picker = picker;
+    const bestColor = rangarang(getDataFromCanvas(image)).primary;
     console.timeEnd('picker');
-    const bestColor = picker.getBestColor().primary;
     document.body.style.backgroundColor = bestColor;
     document.title = bestColor;
     document.querySelector('meta[name=theme-color]').content = bestColor;
