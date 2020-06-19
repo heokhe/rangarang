@@ -27,7 +27,7 @@ rangarang(somehowGetPixelData());
 ### `rangarang`
 | Argument name | Type | Description
 | - | - | -
-| `data` | `Uint8Array | Uint8ClampedArray` | Image's pixel data.
+| `data` | `Uint8Array \| Uint8ClampedArray` | Image's pixel data.
 | `options` | `object?` | Options. 👇
 | `options.skipPixels` | `number?` | Number of pixels to skip in each iteration. Defaults to 0
 | `options.minLuminance` | `number?` | The minimum luminance for an acceptable color. Defaults to 0.2
