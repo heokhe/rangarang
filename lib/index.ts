@@ -21,17 +21,14 @@ export default class ColorPicker {
   }
 
   private _extractIntoSet() {
-    const { _data: data } = this;
+    const data = this._data;
     for (let i = 0; i < data.length; i += 4) {
-      const rgb = [data[i], data[i + 1], data[i + 2]] as RGB,
+      const rgb: RGB = [data[i], data[i + 1], data[i + 2]],
         hex = serializeHex(rgb),
         l = getLuminosity(rgb);
 
-      let s = getSaturation(rgb);
-      if (l > MIN_LUM && l < MAX_LUM && s >= MIN_SAT) {
-        s = round(s, SAT_STEP);
-        const h = round(getHue(rgb), HUE_STEP);
-        const k = `${h} ${s}`;
+      if (l > MIN_LUM && l < MAX_LUM && getSaturation(rgb) >= MIN_SAT) {
+        const k = this._generateKey(hex);
         const value = this._occurencesMap.get(k) || 0;
         this._occurencesMap.set(k, value + 1);
         if (value === 0 || nextIsBetter(this._colorsMap.get(k), hex)) this._colorsMap.set(k, hex);
@@ -39,12 +36,17 @@ export default class ColorPicker {
     }
   }
 
-  private _getScore(hex: string) {
-    const rgb = deserializeHex(hex),
+  private _generateKey(color: string) {
+    const rgb = deserializeHex(color),
       s = round(getSaturation(rgb), SAT_STEP),
-      h = round(getHue(rgb), HUE_STEP),
-      o = this._occurencesMap.get(`${h} ${s}`) || 0;
-    return calculateColorScore(rgb) * o;
+      h = round(getHue(rgb), HUE_STEP);
+    return `${h === 360 ? 0 : h} ${s}`;
+  }
+
+  private _getScore(color: string) {
+    return calculateColorScore(deserializeHex(color)) * (
+      this._occurencesMap.get(this._generateKey(color)) || 0
+    );
   }
 
   getBestColor() {

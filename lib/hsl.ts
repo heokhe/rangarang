@@ -22,8 +22,6 @@ export function getHue([r, g, b]: RGB) {
   h *= 60;
   if (h < 0) h += 360;
 
-  if (360 - h <= 5) return 0;
-
   return h;
 }
 
