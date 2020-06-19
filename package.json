@@ -1,7 +1,7 @@
 {
   "name": "rangarang",
   "version": "1.0.0",
-  "description": "Choose the best colors from a picture.",
+  "description": "Chooses the best colors from a picture.",
   "source": "lib/index.ts",
   "main": "dist/index.umd.js",
   "module": "dist/index.modern.js",
@@ -15,9 +15,16 @@
     "type": "git",
     "url": "git+https://github.com/hkh12/rangarang.git"
   },
-  "keywords": [],
+  "keywords": [
+    "color",
+    "colour",
+    "detection",
+    "image",
+    "picture",
+    "canvas"
+  ],
   "author": "Hosein Khansari <hrk.x11@gmail.com>",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/hkh12/rangarang/issues"
   },
