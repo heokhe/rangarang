@@ -16,7 +16,7 @@ const DEFAULT_OPTIONS: Options = {
   maxLuminance: 0.8,
   minLuminance: 0.2,
   minSaturation: 0.1,
-  skipPixels: 1
+  skipPixels: 0
 };
 
 export class ColorPicker {
@@ -49,7 +49,7 @@ export class ColorPicker {
       {
         maxLuminance: maxl, minLuminance: minl, minSaturation: mins, skipPixels
       } = this._options;
-    for (let i = 0; i < data.length; i += 4 * skipPixels) {
+    for (let i = 0; i < data.length; i += 4 * (skipPixels + 1)) {
       const rgb: RGB = [data[i], data[i + 1], data[i + 2]],
         hex = serializeHex(rgb),
         l = getLuminance(rgb);
