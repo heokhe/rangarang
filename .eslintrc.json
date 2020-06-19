@@ -1,0 +1,27 @@
+{
+  "root": true,
+  "parser": "@typescript-eslint/parser",
+  "plugins": ["@typescript-eslint"],
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:@typescript-eslint/recommended",
+    "@hkh12"
+  ],
+  "env": {
+    "browser": true,
+    "es6": true
+  },
+  "rules": {
+    // "implicit-arrow-linebreak": "off",
+    // "class-methods-use-this": "off",
+    // "nonblock-statement-body-position": "off",
+    // "curly": "off",
+    // "no-unused-expressions": "off",
+    "import/no-unresolved": "off",
+    "import/extensions": "off",
+    "@typescript-eslint/explicit-function-return-type": "off",
+    "@typescript-eslint/explicit-module-boundary-types": "off"
+    // "@typescript-eslint/no-explicit-any": "off"
+  }     
+}
