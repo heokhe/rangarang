@@ -31,5 +31,6 @@ export function getHue([r, g, b]: RGB) {
 export function getSaturation([r, g, b]: RGB) {
   const l = getLuminance([r, g, b]);
   if (l === 1 || l === 0) return 0;
-  return (Math.max(r, g, b) - Math.min(r, g, b)) / 255 / (1 - Math.abs(2 * l - 1));
+  const d = (Math.max(r, g, b) - Math.min(r, g, b)) / 255;
+  return Math.min(1, d / (1 - Math.abs(2 * l - 1)));
 }
