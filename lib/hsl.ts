@@ -4,6 +4,9 @@ export const getLuminance = ([r, g, b]: RGB) => (0.299 * r + 0.587 * g + 0.114 *
 
 export function getHue([r, g, b]: RGB) {
   [r, g, b] = [r, g, b].map(x => x / 255);
+
+  if (r === g && r === b) return 0;
+
   let h = 0;
   if (r >= g && g >= b) {
     h = (g - b) / (r - b);
@@ -27,6 +30,6 @@ export function getHue([r, g, b]: RGB) {
 
 export function getSaturation([r, g, b]: RGB) {
   const l = getLuminance([r, g, b]);
-  if (l === 1) return 0;
+  if (l === 1 || l === 0) return 0;
   return (Math.max(r, g, b) - Math.min(r, g, b)) / 255 / (1 - Math.abs(2 * l - 1));
 }
