@@ -1,8 +1,6 @@
 import { getHue, getLuminance, getSaturation } from './hsl';
 import {
-  Data, round, deserializeHex, serializeHex,
-  createScoreCalculator, ScoreCalculator,
-  createComparator, Comparator
+  Data, round, deserializeHex, serializeHex
 } from './helpers-and-types';
 import { ensureContrastRatio } from './contrast';
 
@@ -21,24 +19,14 @@ const DEFAULT_OPTIONS: Options = {
 };
 
 export class ColorPicker {
-  private _colorsMap: Map<string, string>;
+  private _colorsMap: Map<string, string> = new Map();
 
-  private _occurencesMap: Map<string, number>;
+  private _occurencesMap: Map<string, number> = new Map();
 
   private _options: Options;
 
-  private _calculateScore: ScoreCalculator;
-
-  private _compare: Comparator;
-
   constructor(data: Data, options: Options) {
     this._options = options;
-    this._calculateScore = createScoreCalculator(
-      this._options.minLuminance, this._options.maxLuminance
-    );
-    this._compare = createComparator(this._calculateScore);
-    this._colorsMap = new Map();
-    this._occurencesMap = new Map();
     this._collectData(data);
   }
 
@@ -53,23 +41,23 @@ export class ColorPicker {
     const s = 4 * (this._options.skipPixels + 1);
     for (let i = 0; i < data.length; i += s) {
       const hex = serializeHex([data[i], data[i + 1], data[i + 2]]);
-      const k = this._generateKey(hex);
-      this._occurencesMap.set(k, (this._occurencesMap.get(k) || 0) + 1);
-      const prevColor = this._colorsMap.get(k);
-      if (!prevColor) this._colorsMap.set(k, hex);
+      const key = this._generateKey(hex);
+      this._occurencesMap.set(key, (this._occurencesMap.get(key) || 0) + 1);
+      if (!this._colorsMap.has(key)) this._colorsMap.set(key, hex);
     }
   }
 
   private _generateKey(color: string) {
     const rgb = deserializeHex(color),
-      s = round(getSaturation(rgb), 1 / 3).toPrecision(),
+      s = round(getSaturation(rgb), 1 / 3),
       h = round(getHue(rgb), 6),
-      l = round(getLuminance(rgb), 0.25).toPrecision();
+      l = round(getLuminance(rgb), 0.25);
     return `${h} ${s} ${l}`;
   }
 
   private _getScore(color: string) {
-    return this._calculateScore(deserializeHex(color)) * (
+    const l = getLuminance(deserializeHex(color));
+    return (l - this._options.minLuminance) * (this._options.maxLuminance - l) * (
       this._occurencesMap.get(this._generateKey(color)) || 0
     );
   }
