@@ -91,7 +91,7 @@ export class ColorPicker {
 }
 
 export default function rangarang(data: Data, options: Partial<Options> = {}) {
-  const picker = new ColorPicker(data, { ...options, ...DEFAULT_OPTIONS });
+  const picker = new ColorPicker(data, { ...DEFAULT_OPTIONS, ...options });
   return picker.getBestColor();
 }
 
