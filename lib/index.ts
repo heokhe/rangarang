@@ -12,8 +12,8 @@ export class ColorPicker {
 
   private _options: Options;
 
-  constructor(data: Data, options: Options) {
-    this._options = options;
+  constructor(data: Data, options?: Partial<Options>) {
+    this._options = { ...DEFAULT_OPTIONS, ...options };
     this._collectData(data);
   }
 
@@ -76,8 +76,8 @@ export class ColorPicker {
   }
 }
 
-export default function rangarang(data: Data, options: Partial<Options> = {}) {
-  const picker = new ColorPicker(data, { ...DEFAULT_OPTIONS, ...options });
+export default function rangarang(data: Data, options?: Partial<Options>) {
+  const picker = new ColorPicker(data, options);
   return picker.getBestColor();
 }
 
