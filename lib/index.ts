@@ -1,22 +1,9 @@
+import { DEFAULT_OPTIONS, Options } from './options';
 import { getHue, getLuminance, getSaturation } from './hsl';
 import {
   Data, round, deserializeHex, serializeHex
 } from './helpers-and-types';
 import { ensureContrastRatio } from './contrast';
-
-export type Options = {
-  skipPixels: number;
-  minLuminance: number;
-  maxLuminance: number;
-  minSaturation: number;
-}
-
-const DEFAULT_OPTIONS: Options = {
-  maxLuminance: 0.8,
-  minLuminance: 0.2,
-  minSaturation: 0.1,
-  skipPixels: 0
-};
 
 export class ColorPicker {
   private _colorsMap: Map<string, string> = new Map();

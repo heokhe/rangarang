@@ -2,8 +2,10 @@ export type RGB = [number, number, number];
 export type Data = Uint8Array | Uint8ClampedArray;
 export type Image = HTMLImageElement | Buffer | Data;
 
+export const clamp = (x: number) => Math.max(Math.min(x, 255), 0);
+
 export const serializeHex = ([r, g, b]: RGB) => `#${
-  [r, g, b].map(x => Math.min(Math.round(x), 255).toString(16).padStart(2, '0')).join('')
+  [r, g, b].map(x => clamp(x).toString(16).padStart(2, '0')).join('')
 }`;
 
 export const deserializeHex = (hex: string) => [

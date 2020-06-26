@@ -1,4 +1,4 @@
-import { RGB } from './helpers-and-types';
+import { RGB, clamp } from './helpers-and-types';
 
 function getRelativeLuminance(color: RGB) {
   const [r, g, b] = color.map(x => x / 255).map(x => {
@@ -13,8 +13,6 @@ export function calculateContrastRatio(a: RGB | number, b: RGB | number) {
     lb = (typeof b === 'number' ? b : getRelativeLuminance(b)) + 0.05;
   return la > lb ? la / lb : lb / la;
 }
-
-const clamp = (x: number) => Math.max(Math.min(x, 255), 0);
 
 const STEP = 5;
 export function ensureContrastRatio(background: RGB, color: RGB): RGB {
