@@ -1,4 +1,4 @@
-import { Data/* , Image */ } from './helpers-and-types';
+import { Data } from './helpers-and-types';
 
 export function getDataFromCanvas(image: HTMLImageElement, divideSizeTo = 16): Data {
   const canvas = document.createElement('canvas');
@@ -11,13 +11,3 @@ export function getDataFromCanvas(image: HTMLImageElement, divideSizeTo = 16): D
   canvas.remove();
   return data;
 }
-
-// export default function getData(image: Image): Data {
-//   if (typeof window !== 'undefined' && image instanceof HTMLImageElement) {
-//     return getDataFromCanvas(image);
-//   }
-//   if (image instanceof Buffer) {
-//     return new Uint8Array(image);
-//   }
-//   return image as Data;
-// }

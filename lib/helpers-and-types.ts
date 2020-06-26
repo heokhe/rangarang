@@ -1,6 +1,5 @@
 export type RGB = [number, number, number];
 export type Data = Uint8Array | Uint8ClampedArray;
-export type Image = HTMLImageElement | Buffer | Data;
 
 export const clamp = (x: number) => Math.max(Math.min(x, 255), 0);
 
