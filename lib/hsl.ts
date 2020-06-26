@@ -1,6 +1,6 @@
 import { RGB } from './helpers-and-types';
 
-export const getLuminance = ([r, g, b]: RGB) => (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+export const getLuminance = (rgb: RGB) => (Math.max(...rgb) + Math.min(...rgb)) / 2 / 255;
 
 export function getHue([r, g, b]: RGB) {
   [r, g, b] = [r, g, b].map(x => x / 255);
@@ -24,6 +24,7 @@ export function getHue([r, g, b]: RGB) {
 
   h *= 60;
   if (h < 0) h += 360;
+  if (h >= 355) h = 0;
 
   return h;
 }
