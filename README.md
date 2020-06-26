@@ -1,5 +1,5 @@
 # 🌈 Rangarang
-Rangarang (Persian word for "Colorful") is a tiny library that **chooses the best colors from a picture**. It actually extracts a beautiful background color, and a primary color.
+Rangarang (Persian word for "Colorful") is a tiny library that **chooses the best colors from a picture**. It extracts a beautiful background color, and an accessible text color.
 
 It is:
 - Very, very lightweight ⚡️
@@ -15,8 +15,8 @@ import rangarang, { getDataFromCanvas } from 'rangarang';
 
 const img = document.querySelector('img');
 img.onload = () => {
-  const { background, primary } = rangarang(getDataFromCanvas(img)));
-  console.log(background, primary) // prints two hexacodes
+  const { background, text } = rangarang(getDataFromCanvas(img)));
+  console.log(background, text) // prints two hexacodes
 };
 ```
 But in Node.js environments, it's a bit harder. This library does not have any functions to extract pixel data from an image in Node, but you can extract it using your favorite library and use it:

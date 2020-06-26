@@ -72,7 +72,7 @@ export class ColorPicker {
     prevColor = serializeHex(
       ensureContrastRatio(deserializeHex(prevBg), deserializeHex(prevColor ?? prevBg))
     );
-    return { primary: prevColor, background: prevBg };
+    return { text: prevColor, background: prevBg };
   }
 }
 
@@ -82,4 +82,4 @@ export default function rangarang(data: Data, options?: Partial<Options>) {
 }
 
 export { getDataFromCanvas } from './data';
-export type { Data, Image, RGB } from './helpers-and-types';
+export type { Data, RGB } from './helpers-and-types';

@@ -11,11 +11,11 @@ window.onload = () => {
     image.onload = () => {
       const data = getDataFromCanvas(image);
       const startTime = Date.now();
-      const { primary, background } = rangarang(data);
+      const { text, background } = rangarang(data);
       const duration = Date.now() - startTime;
       body.style.backgroundColor = background;
-      body.style.color = primary;
-      document.title = `${primary} on ${background}`;
+      body.style.color = text;
+      document.title = `${text} on ${background}`;
       document.querySelector('meta[name=theme-color]').content = background;
       body.insertAdjacentHTML('beforeend', `
         <h1>${filename}</h1>
