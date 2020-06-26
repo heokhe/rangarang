@@ -6,12 +6,13 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-direction: column;
   min-height: 100vh;
   transition: .15s ease;
 }
 img {
   max-width: 300px;
-  max-height: 80vh;
+  max-height: 50vh;
   border-radius: 16px;
   box-shadow: 0 10px 20px #0004, 0 2px 56px #0004;
   opacity: 0;
@@ -21,4 +22,11 @@ img {
 img.active {
   transform: translateY(0) scale(1);
   opacity: 1;
+}
+h1 {
+  margin-top: 2.5rem;
+  margin-bottom: 0.5rem;
+}
+p {
+  margin: 0;
 }

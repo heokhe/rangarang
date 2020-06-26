@@ -1,9 +1,10 @@
 import { getHue, getLuminance, getSaturation } from './hsl';
 import {
-  RGB, Data, round, deserializeHex, serializeHex,
+  Data, round, deserializeHex, serializeHex,
   createScoreCalculator, ScoreCalculator,
   createComparator, Comparator
 } from './helpers-and-types';
+import { ensureContrastRatio } from './contrast';
 
 export type Options = {
   skipPixels: number;
@@ -20,8 +21,6 @@ const DEFAULT_OPTIONS: Options = {
 };
 
 export class ColorPicker {
-  private _data: Data;
-
   private _colorsMap: Map<string, string>;
 
   private _occurencesMap: Map<string, number>;
@@ -33,7 +32,6 @@ export class ColorPicker {
   private _compare: Comparator;
 
   constructor(data: Data, options: Options) {
-    this._data = data;
     this._options = options;
     this._calculateScore = createScoreCalculator(
       this._options.minLuminance, this._options.maxLuminance
@@ -41,33 +39,33 @@ export class ColorPicker {
     this._compare = createComparator(this._calculateScore);
     this._colorsMap = new Map();
     this._occurencesMap = new Map();
-    this._extractIntoSet();
+    this._collectData(data);
   }
 
-  private _extractIntoSet() {
-    const data = this._data,
-      {
-        maxLuminance: maxl, minLuminance: minl, minSaturation: mins, skipPixels
-      } = this._options;
-    for (let i = 0; i < data.length; i += 4 * (skipPixels + 1)) {
-      const rgb: RGB = [data[i], data[i + 1], data[i + 2]],
-        hex = serializeHex(rgb),
-        l = getLuminance(rgb);
+  private _isGood(color: string) {
+    const rgb = deserializeHex(color),
+      l = getLuminance(rgb),
+      { maxLuminance, minSaturation, minLuminance } = this._options;
+    return l > minLuminance && l < maxLuminance && getSaturation(rgb) >= minSaturation;
+  }
 
-      if (l > minl && l < maxl && getSaturation(rgb) >= mins) {
-        const k = this._generateKey(hex);
-        const value = this._occurencesMap.get(k) || 0;
-        this._occurencesMap.set(k, value + 1);
-        if (value === 0 || this._compare(this._colorsMap.get(k), hex)) this._colorsMap.set(k, hex);
-      }
+  private _collectData(data: Data) {
+    const s = 4 * (this._options.skipPixels + 1);
+    for (let i = 0; i < data.length; i += s) {
+      const hex = serializeHex([data[i], data[i + 1], data[i + 2]]);
+      const k = this._generateKey(hex);
+      this._occurencesMap.set(k, (this._occurencesMap.get(k) || 0) + 1);
+      const prevColor = this._colorsMap.get(k);
+      if (!prevColor) this._colorsMap.set(k, hex);
     }
   }
 
   private _generateKey(color: string) {
     const rgb = deserializeHex(color),
-      s = round(getSaturation(rgb), 4),
-      h = round(getHue(rgb), 30);
-    return `${h === 360 ? 0 : h} ${s}`;
+      s = round(getSaturation(rgb), 1 / 3).toPrecision(),
+      h = round(getHue(rgb), 6),
+      l = round(getLuminance(rgb), 0.25).toPrecision();
+    return `${h} ${s} ${l}`;
   }
 
   private _getScore(color: string) {
@@ -78,15 +76,28 @@ export class ColorPicker {
 
   getBestColor() {
     let prevColor: string,
-      prevScore: number;
+      prevBg: string,
+      prevScore: number,
+      prevBgScore: number;
     for (const color of this._colorsMap.values()) {
+      const bgScore = this._occurencesMap.get(this._generateKey(color)) || 0;
+      if (!prevBg || bgScore > prevBgScore) {
+        prevBg = color;
+        prevBgScore = bgScore;
+      }
+    }
+    for (const color of this._colorsMap.values()) {
+      if (!this._isGood(color)) continue;
       const score = this._getScore(color);
       if (!prevColor || score > prevScore) {
         prevColor = color;
         prevScore = score;
       }
     }
-    return { primary: prevColor };
+    prevColor = serializeHex(
+      ensureContrastRatio(deserializeHex(prevBg), deserializeHex(prevColor ?? prevBg))
+    );
+    return { primary: prevColor, background: prevBg };
   }
 }
 
