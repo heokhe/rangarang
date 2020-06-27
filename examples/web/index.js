@@ -19,7 +19,7 @@ window.onload = () => {
       document.querySelector('meta[name=theme-color]').content = background;
       body.insertAdjacentHTML('beforeend', `
         <h1>${filename}</h1>
-        <p>Generated in ${duration.toFixed(2)}ms</p>
+        <p>Generated in <b>${duration}ms</b> (~${(data.length / 4 / duration).toFixed(2)} pixels per ms)</p>
       `);
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
