@@ -9,15 +9,10 @@ export const serializeHex = ([r, g, b]: RGB) => `#${
   [r, g, b].map(x => clamp(x).toString(16).padStart(2, '0')).join('')
 }`;
 
-export const deserializeHex = (hex: string) => [
-  hex.slice(1, 3), hex.slice(3, 5), hex.slice(5, 7)
-].map(s => parseInt(s, 16)) as RGB;
-
 export const round = (x: number, r: number) => Math.round(x / r) * r;
 
-export function generateKey(color: string) {
-  const rgb = deserializeHex(color),
-    s = round(getSaturation(rgb), 1 / 3),
+export function generateKey(rgb: RGB) {
+  const s = round(getSaturation(rgb), 1 / 3),
     h = round(getHue(rgb), 6),
     l = round(getLuminance(rgb), 0.25);
   return `${h} ${s} ${l}`;
