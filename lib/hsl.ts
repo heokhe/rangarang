@@ -1,4 +1,4 @@
-import { RGB } from './helpers-and-types';
+import type { RGB } from './helpers-and-types';
 
 export const getLuminance = (rgb: RGB) => (Math.max(...rgb) + Math.min(...rgb)) / 2 / 255;
 

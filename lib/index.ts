@@ -1,7 +1,7 @@
 import { DEFAULT_OPTIONS, Options } from './options';
-import { getHue, getLuminance, getSaturation } from './hsl';
+import { getLuminance, getSaturation } from './hsl';
 import {
-  Data, round, deserializeHex, serializeHex
+  Data, deserializeHex, serializeHex, generateKey
 } from './helpers-and-types';
 import { ensureContrastRatio } from './contrast';
 
@@ -28,24 +28,16 @@ export class ColorPicker {
     const s = 4 * (this._options.skipPixels + 1);
     for (let i = 0; i < data.length; i += s) {
       const hex = serializeHex([data[i], data[i + 1], data[i + 2]]);
-      const key = this._generateKey(hex);
+      const key = generateKey(hex);
       this._occurencesMap.set(key, (this._occurencesMap.get(key) || 0) + 1);
       if (!this._colorsMap.has(key)) this._colorsMap.set(key, hex);
     }
   }
 
-  private _generateKey(color: string) {
-    const rgb = deserializeHex(color),
-      s = round(getSaturation(rgb), 1 / 3),
-      h = round(getHue(rgb), 6),
-      l = round(getLuminance(rgb), 0.25);
-    return `${h} ${s} ${l}`;
-  }
-
   private _getScore(color: string) {
     const l = getLuminance(deserializeHex(color));
     return (l - this._options.minLuminance) * (this._options.maxLuminance - l) * (
-      this._occurencesMap.get(this._generateKey(color)) || 0
+      this._occurencesMap.get(generateKey(color)) || 0
     );
   }
 
@@ -55,18 +47,17 @@ export class ColorPicker {
       prevScore: number,
       prevBgScore: number;
     for (const color of this._colorsMap.values()) {
-      const bgScore = this._occurencesMap.get(this._generateKey(color)) || 0;
+      const bgScore = this._occurencesMap.get(generateKey(color)) || 0;
       if (!prevBg || bgScore > prevBgScore) {
         prevBg = color;
         prevBgScore = bgScore;
       }
-    }
-    for (const color of this._colorsMap.values()) {
-      if (!this._isGood(color)) continue;
-      const score = this._getScore(color);
-      if (!prevColor || score > prevScore) {
-        prevColor = color;
-        prevScore = score;
+      if (this._isGood(color)) {
+        const score = this._getScore(color);
+        if (!prevColor || score > prevScore) {
+          prevColor = color;
+          prevScore = score;
+        }
       }
     }
     prevColor = serializeHex(

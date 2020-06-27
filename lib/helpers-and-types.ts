@@ -1,3 +1,5 @@
+import { getSaturation, getHue, getLuminance } from './hsl';
+
 export type RGB = [number, number, number];
 export type Data = Uint8Array | Uint8ClampedArray;
 
@@ -12,3 +14,11 @@ export const deserializeHex = (hex: string) => [
 ].map(s => parseInt(s, 16)) as RGB;
 
 export const round = (x: number, r: number) => Math.round(x / r) * r;
+
+export function generateKey(color: string) {
+  const rgb = deserializeHex(color),
+    s = round(getSaturation(rgb), 1 / 3),
+    h = round(getHue(rgb), 6),
+    l = round(getLuminance(rgb), 0.25);
+  return `${h} ${s} ${l}`;
+}
