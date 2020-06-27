@@ -41,8 +41,17 @@ rangarang(somehowGetPixelData());
 | `image` | `HTMLImageElement` | The source image.
 | `divideSizeTo` | `number?` | Number to divide the `<canvas>`'s size to. Bigger number results in a faster and less precise operation. Defaults to 16
 
+## Development
+You can visually test the code:
+```sh
+npm run serve
+npm run build -- --watch
+```
+Then head to `localhost:8080/examples/web`.
+
 ## Todos
 - [ ] Better support for Node.js environments
 - [x] Choose not only one color but more colors (secondary, background, etc.)
 - [x] Allow to modify the behaviour of the code
-- [ ] Improve the performance
+- [x] Improve the performance
+- [ ] Write tests
