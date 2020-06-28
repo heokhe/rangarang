@@ -24,8 +24,9 @@ export class ColorPicker {
   }
 
   private _collectData(data: Data) {
-    const s = 4 * (this._options.skipPixels + 1);
-    for (let i = 0; i < data.length; i += s) {
+    const step = 4 * (this._options.skipPixels + 1);
+    const { length } = data;
+    for (let i = 0; i < length; i += step) {
       const rgb: RGB = [data[i], data[i + 1], data[i + 2]];
       const key = generateKey(rgb);
       this._occurencesMap.set(key, (this._occurencesMap.get(key) || 0) + 1);
@@ -59,7 +60,7 @@ export class ColorPicker {
         }
       }
     }
-    prevColor = ensureContrastRatio(prevBg, prevColor ?? prevBg);
+    prevColor = ensureContrastRatio(prevBg, prevColor || prevBg);
     return {
       text: serializeHex(prevColor),
       background: serializeHex(prevBg)
