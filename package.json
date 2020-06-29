@@ -1,6 +1,6 @@
 {
   "name": "rangarang",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Chooses the best colors from a picture.",
   "source": "lib/index.ts",
   "main": "dist/index.umd.js",
