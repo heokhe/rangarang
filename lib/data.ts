@@ -1,13 +1,17 @@
 import { Data } from './helpers-and-types';
 
-export function getDataFromCanvas(image: HTMLImageElement, divideSizeTo = 16): Data {
+type Size = number | ((originalWidth: number) => number);
+const getDefaultSize = (x: number) => Math.max(80, x / 16);
+export function getDataFromCanvas(image: HTMLImageElement, size: Size = getDefaultSize): Data {
   const canvas = document.createElement('canvas');
-  canvas.width = image.naturalWidth / divideSizeTo;
-  canvas.height = image.naturalHeight / divideSizeTo;
+  const width: number = typeof size === 'function' ? size(image.naturalWidth) : size;
+  const height = width * image.naturalHeight / image.naturalWidth;
+  canvas.width = width;
+  canvas.height = height;
   const ctx = canvas.getContext('2d');
   ctx.imageSmoothingEnabled = false;
-  ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
-  const { data } = ctx.getImageData(0, 0, canvas.width, canvas.height);
+  ctx.drawImage(image, 0, 0, width, height);
+  const { data } = ctx.getImageData(0, 0, width, height);
   canvas.remove();
   return data;
 }

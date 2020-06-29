@@ -39,7 +39,7 @@ rangarang(somehowGetPixelData());
 | Argument name | Type | Description
 | - | - | -
 | `image` | `HTMLImageElement` | The source image.
-| `divideSizeTo` | `number?` | Number to divide the `<canvas>`'s size to. Bigger number results in a faster and less precise operation. Defaults to 16
+| `size` | `number \| (originalWidth: number) => number` | Number or function to determine the `<canvas>`'s size. Bigger number/output results in a faster and less precise operation. Defaults to `x => Math.max(80, x / 16)`
 
 ## Development
 You can visually test the code:
