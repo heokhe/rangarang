@@ -1,6 +1,6 @@
 {
   "name": "rangarang",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "Chooses the best colors from a picture.",
   "type": "module",
   "source": "lib/index.ts",
