@@ -17,3 +17,17 @@ export function generateKey(rgb: RGB) {
     l = round(getLuminance(rgb), 0.25);
   return `${h} ${s} ${l}`;
 }
+
+export function maxMap<T>(array: T[], getScore: (value: T) => number, defaultScore: number): T {
+  let maxScore: number = defaultScore,
+    maxValue: T | undefined;
+  for (const value of array) {
+    const score = getScore(value);
+    if (score > maxScore || maxScore <= defaultScore) {
+      maxScore = score;
+      maxValue = value;
+    }
+  }
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  return maxValue!;
+}

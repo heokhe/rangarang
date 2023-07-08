@@ -1,7 +1,7 @@
 import { DEFAULT_OPTIONS, Options } from './options';
 import { getLuminance, getSaturation } from './hsl';
 import {
-  Data, RGB, serializeHex, generateKey
+  Data, RGB, serializeHex, generateKey, maxMap
 } from './helpers-and-types';
 import { ensureContrastRatio } from './contrast';
 
@@ -42,28 +42,16 @@ export class ColorPicker {
   }
 
   getBestColor(): { text: string, background: string } {
-    let prevColor: RGB,
-      prevBg: RGB,
-      prevScore: number,
-      prevBgScore: number;
-    for (const [key, color] of this._colorsMap.entries()) {
-      const bgScore = this._occurencesMap.get(key) || 0;
-      if (!prevBg || bgScore > prevBgScore) {
-        prevBg = color;
-        prevBgScore = bgScore;
-      }
-      if (this._isGood(color)) {
-        const score = this._getScore(color, key);
-        if (!prevColor || score > prevScore) {
-          prevColor = color;
-          prevScore = score;
-        }
-      }
-    }
-    prevColor = ensureContrastRatio(prevBg, prevColor || prevBg);
+    const bestBackgroundColor = maxMap([...this._colorsMap.values()], color => {
+      return this._occurencesMap.get(generateKey(color)) || 0;
+    }, 0);
+    const bestForegroundColorWithoutContrast = maxMap([...this._colorsMap.entries()], ([key, color]) => {
+      return this._isGood(color) ? this._getScore(color, key) : 0;
+    }, 0)[1];
+    const bestForegroundColor = ensureContrastRatio(bestBackgroundColor, bestForegroundColorWithoutContrast);
     return {
-      text: serializeHex(prevColor),
-      background: serializeHex(prevBg)
+      text: serializeHex(bestForegroundColor),
+      background: serializeHex(bestBackgroundColor)
     };
   }
 }
